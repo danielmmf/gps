@@ -4,23 +4,19 @@ error_reporting(E_ALL);
 ini_set("display_errors", 1);
 
 
+//$server_output = file_get_contents('https://web.smartgps.com.br/api/get_devices_latest?user_api_hash=$2y$10$yqP4ZJ06VieeWGPiEhNx5.tELC7lRfkv8bYLLjdmhdsfvQFg9OlWu&time=1566671418');
+$server_output = file_get_contents('https://web.smartgps.com.br/api/get_devices_latest?user_api_hash=$2y$10$yqP4ZJ06VieeWGPiEhNx5.tELC7lRfkv8bYLLjdmhdsfvQFg9OlWu');
 
- $ch = curl_init();
+$items = json_decode($server_output, true);
 
-curl_setopt($ch, CURLOPT_URL,"https://web.smartgps.com.br/api/login");
-curl_setopt($ch, CURLOPT_POST, 1);
-curl_setopt($ch, CURLOPT_POSTFIELDS,
-            "email=api@smartgps.com.br&password=123456");
+//file_put_contents('itens.txt', $server_output);
+//print_r($items);
+print_r(count($items['items']));
+$carros = array();
+foreach ($items['items'] as $carro) {
+	$carros[$carro['id']] = $carro;
+	echo $carro['timestamp'];
+}
+echo "=====\n";
+print_r(count($carros));
 
-// In real life you should use something like:
-// curl_setopt($ch, CURLOPT_POSTFIELDS, 
-//          http_build_query(array('postvar1' => 'value1')));
-
-// Receive server response ...
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-$server_output = curl_exec($ch);
-
-curl_close ($ch);
-
-print_r($server_output);
